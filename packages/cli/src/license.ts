@@ -216,11 +216,23 @@ export class License implements LicenseProvider {
 		await this.manager.shutdown();
 		this.logger.debug('License shut down');
 	}
+	
+ isLicensed(feature: LICENSE_FEATURES): boolean {
+        // Check if license is valid first
+        if (!this.isLicenseValid) {
+            return true;
+        } else {
+            if (
+                feature === LICENSE_FEATURES.API_DISABLED ||
+                feature === LICENSE_FEATURES.SHOW_NON_PROD_BANNER
+            ) {
+                return false;
+            }
 
-	isLicensed(feature: BooleanLicenseFeature) {
-		return this.manager?.hasFeatureEnabled(feature) ?? false;
-	}
-
+            // If license is valid, return true for all features
+            return true;
+        }
+    }
 	/** @deprecated Use `LicenseState.isSharingLicensed` instead. */
 	isSharingEnabled() {
 		return this.isLicensed(LICENSE_FEATURES.SHARING);
@@ -413,7 +425,7 @@ export class License implements LicenseProvider {
 	}
 
 	getPlanName(): string {
-		return this.getValue('planName') ?? 'Community';
+		return this.getValue('planName') ?? 'Enterprise';
 	}
 
 	getInfo(): string {
