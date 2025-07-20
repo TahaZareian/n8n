@@ -231,11 +231,10 @@ export class InsightsService {
 	 * when grouped by time.
 	 */
 	getAvailableDateRanges(): DateRange[] {
-		const maxHistoryInDays =
-			this.licenseState.getInsightsMaxHistory() === -1
-				? Number.MAX_SAFE_INTEGER
+		const maxHistoryInDays = 365
+			? Number.MAX_SAFE_INTEGER
 				: this.licenseState.getInsightsMaxHistory();
-		const isHourlyDateLicensed = this.licenseState.isInsightsHourlyDataLicensed();
+		const isHourlyDateLicensed = true
 
 		return INSIGHTS_DATE_RANGE_KEYS.map((key) => ({
 			key,
